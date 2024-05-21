@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Min Hemsida</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Välkommen till min hemsida</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/">Hem</a></li>
+            <li><a href="/admin">Admin</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section>
+            <h2>Logga in</h2>
+            <form id="login-form">
+                <label for="username">Användarnamn:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Lösenord:</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Logga in</button>
+            </form>
+        </section>
+        <section>
+            <h2>Registrera</h2>
+            <form id="register-form">
+                <label for="new-username">Användarnamn:</label>
+                <input type="text" id="new-username" name="username" required>
+                <label for="new-password">Lösenord:</label>
+                <input type="password" id="new-password" name="password" required>
+                <button type="submit">Registrera</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Min Hemsida</p>
+    </footer>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                localStorage.setItem('token', data.token);
+                window.location.href = '/admin';
+            } else {
+                alert(data.message);
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+
+            const res = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                alert('Registrering lyckades. Du kan nu logga in.');
+            } else {
+                alert(data.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+<script>
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fileInput = document.querySelector('input[type="file"]');
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        const token = localStorage.getItem('token');
+
+        const res = await fetch('/admin/upload', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        const data = await res.text();
+        if (res.ok) {
+            alert('Fil uppladdad framgångsrikt');
+        } else {
+            alert(data);
+        }
+    });
+</script>
